@@ -1,8 +1,14 @@
     .extern start_kernel
+    .extern mm_init
+    .extern task_init
     .section .text.init
     .globl _start
 _start:
     la sp, boot_stack_top
+
+    call mm_init
+
+    call task_init
 
     # set stvec = _traps
     la t0, _traps
@@ -14,7 +20,7 @@ _start:
 
     # set first time interrupt
     rdtime t0
-    li t1, 10000000
+    li t1, 30000000
 
     add a2, t0, t1
 
@@ -30,7 +36,6 @@ _start:
 
     # set sstatus[SIE] = 1
     csrs sstatus, 2
-
 
     call start_kernel
 

@@ -88,3 +88,54 @@ _traps:
 
     # 4. return from trap
     sret
+
+
+    .extern dummy
+    .globl __dummy
+__dummy:
+    # 在 __dummy 中将 sepc 设置为 dummy() 的地址，并使用 sret 从 S 模式中返回
+    la t0, dummy
+    csrw sepc, t0
+    sret
+
+
+    .globl __switch_to
+__switch_to:
+    # a0: prev
+    # a1: next
+    # 保存当前线程的 ra，sp，s0~s11 到当前线程的 thread_struct 中
+    # thread_struct 前有4个8位的数据，所以偏移量起始为32
+
+    # save state to prev process
+    sd ra, 32(a0)
+    sd sp, 40(a0)
+    sd s0, 48(a0)
+    sd s1, 56(a0)
+    sd s2, 64(a0)
+    sd s3, 72(a0)
+    sd s4, 80(a0)
+    sd s5, 88(a0)
+    sd s6, 96(a0)
+    sd s7, 104(a0)
+    sd s8, 112(a0)
+    sd s9, 120(a0)
+    sd s10, 128(a0)
+    sd s11, 136(a0)
+
+    # restore state from next process
+    ld ra, 32(a1)
+    ld sp, 40(a1)
+    ld s0, 48(a1)
+    ld s1, 56(a1)
+    ld s2, 64(a1)
+    ld s3, 72(a1)
+    ld s4, 80(a1)
+    ld s5, 88(a1)
+    ld s6, 96(a1)
+    ld s7, 104(a1)
+    ld s8, 112(a1)
+    ld s9, 120(a1)
+    ld s10, 128(a1)
+    ld s11, 136(a1)
+
+    ret

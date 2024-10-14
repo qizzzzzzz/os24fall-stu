@@ -1,6 +1,7 @@
 #include "stdint.h"
 #include "printk.h"
 #include "clock.h"
+#include "proc.h"
 
 void trap_handler(uint64_t scause, uint64_t sepc) {
     // interrupt：最高位
@@ -14,8 +15,9 @@ void trap_handler(uint64_t scause, uint64_t sepc) {
 
     if(interrupt == 1) {
         if(exception_code == 5) {
-            printk("[S] Supervisor Mode Timer Interrupt\n");
+            // printk("[S] Supervisor Mode Timer Interrupt\n");
             clock_set_next_event();
+            do_timer();
         }else {
             printk("Other Interrupt\n");
         }

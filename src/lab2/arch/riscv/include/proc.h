@@ -16,7 +16,7 @@
 
 /* 线程状态段数据结构 */
 struct thread_struct {
-    uint64_t ra;
+    uint64_t ra; // 调用该线程的调用者的信息
     uint64_t sp;
     uint64_t s[12];
 };
